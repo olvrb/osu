@@ -12,9 +12,9 @@ class Osu:
         self.bot = bot
 
     @commands.command(name="user")
-    async def user(self, ctx,  *, name):
+    async def user(self, ctx, *, name):
         results = self.api.get_user(name)
-        return await ctx.send(f"{results[0].username}")
+        await ctx.send(f"{results[0].username}")
 
 
 def setup(bot):
