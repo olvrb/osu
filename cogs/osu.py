@@ -18,54 +18,72 @@ class Osu:
     @commands.group(invoke_without_command=True)
     async def user(self, ctx, *, name):
         results = await self.api.get_user(name) # empty list if not found
-        await ctx.send(f"{results[0].username}")
+        if results:
+            await ctx.send(f"{results[0].username}")
 
     @user.command(name='standard')
     async def osu(self, ctx, *, name):
         results = await self.api.get_user(name)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            await ctx.send(f"{results[0].username}")
 
     @user.command()
     async def taiko(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.taiko)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            await ctx.send(f"{results[0].username}")
 
     @user.command()
     async def mania(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.mania)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            await ctx.send(f"{results[0].username}")
 
     @user.command()
     async def catch(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.ctb)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            await ctx.send(f"{results[0].username}")
 
     @commands.group(invoke_without_command=True)
     async def banner(self, ctx, *, name):
         results = await self.api.get_user(name)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
+            embed.set_image(url=self.banner_url(0,name))
+            await ctx.send(embed=embed)
 
     @banner.command(name='standard')
     async def osu_(self, ctx, *, name):
         results = await self.api.get_user(name)
-        embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
-        embed.set_image(url=self.banner_url(0,name))
-        await ctx.send(embed=embed)
+        if results:
+            embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
+            embed.set_image(url=self.banner_url(0,name))
+            await ctx.send(embed=embed)
 
     @banner.command(name='taiko')
     async def taiko_(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.taiko)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
+            embed.set_image(url=self.banner_url(1,name))
+            await ctx.send(embed=embed)
 
     @banner.command(name='mania')
     async def mania_(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.mania)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
+            embed.set_image(url=self.banner_url(2,name))
+            await ctx.send(embed=embed)
 
     @banner.command(name='catch')
     async def catch_(self, ctx, *, name):
         results = await self.api.get_user(name, mode=enums.OsuMode.ctb)
-        await ctx.send(f"{results[0].username}")
+        if results:
+            embed = discord.Embed(colour=discord.Colour(0xbb1177),title=results[0].username,url=f'https://osu.ppy.sh/users/{results[0].user_id}')
+            embed.set_image(url=self.banner_url(3,name))
+            await ctx.send(embed=embed)
 
 
 def setup(bot):
