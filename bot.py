@@ -22,16 +22,19 @@ class pysu(commands.Bot):
     def __init__(self):
         self.version = 1.0
         super().__init__(command_prefix=prefix_func)
-        self.remove_command("help")
+        # self.remove_command("help")
+        # we can do that in its own cog
 
         for ext in self.cog_loads():
             print(f"[+] Loaded cog {ext}")
             self.load_extension(ext)
+
     async def on_ready(self):
         print('-'*40)
-        print('{:^40}'.format(self.user))
-        print('{:^40}'.format(self.user.id))
+        print('{:^40}'.format(str(self.user)))
+        print('{:^40}'.format(str(self.user.id)))
         print('-'*40)
+
 
 # Runs the bot.
 bot = pysu()
