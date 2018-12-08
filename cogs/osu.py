@@ -19,7 +19,12 @@ class Osu:
     async def user(self, ctx, *, name):
         results = await self.api.get_user(name) # empty list if not found
         if results:
-            await ctx.send(f"{results[0].username}")
+            print(f"{results[0]}")
+            embed= discord.Embed()
+            embed.color=0xbb1177
+            embed.title=f"osu! user - {results[0].username}"
+            embed.add_field(name="user stats", value=f"id: {results[0].user_id}\nlevel: {results[0].level}")
+            await ctx.send(embed=embed)
 
     @user.command(name='standard')
     async def osu(self, ctx, *, name):
