@@ -9,9 +9,34 @@ import os.path
 from discord.ext import commands
 import config
 
+try:
+    open('profiles.sav').close()
+except:
+    with open('profiles.sav','w') as file:
+        file.write('{}')
+with open('profiles.sav') as file:
+    profiledata = file.read()
+
+try:
+    open('prefixes.sav').close()
+except:
+    with open('prefixes.sav','w') as file:
+        file.write('{}')
+with open('prefixes.sav') as file:
+    prefixdata = file.read()
 
 async def prefix_func(bot, msg):
-    return ['osu!','pysu!']
+    try:
+        extra = bot.prefixes[msg.guild.id]
+    except KeyError:
+        extra = None
+    except AttributeError:
+        extra = ''
+    if extra is not None:
+        prefixes = [extra, 'osu!','pysu!', '<@421879566265614337>', '<@!421879566265614337>']
+    else:
+        prefixes = ['osu!','pysu!', '<@421879566265614337>', '<@!421879566265614337>']
+    return prefixes
 
 
 class pysu(commands.Bot):
@@ -21,6 +46,8 @@ class pysu(commands.Bot):
 
     def __init__(self):
         self.version = 1.0
+        self.profiles = profiledata
+        self.prefixes = prefixdata
         super().__init__(command_prefix=prefix_func)
         # self.remove_command("help")
         # we can do that in its own cog
