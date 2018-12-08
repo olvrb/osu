@@ -1,0 +1,201 @@
+from discord.ext import commands
+from discord import *
+from subprocess import run, PIPE
+import aiofiles
+import importlib as imp, traceback
+
+
+def check():
+    async def pred(ctx):
+        ids = [232948417087668235, 124316478978785283, 131131701148647424]
+        return ctx.author.id in ids
+    return commands.check(pred)
+
+class OwnerCog:
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    
+    # Hidden means it won't show up on the default help.
+    @commands.command(name='load')
+    @check
+    async def cog_load(self, ctx, *cogs):
+        """Command which Loads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        for cog in cogs:
+            try:
+                try:
+                    self.bot.load_extension(cog)
+                except ModuleNotFoundError:
+                    cog1 = 'cogs.' + cog
+                    try:
+                        self.bot.load_extension(cog1)
+                    except Exception as e:
+                        embed = Embed(colour=Colour(0xff0000))
+                        embed.set_author(name="ERROR")
+                        embed.add_field(name=type(e).__name__,value=e)
+                        await ctx.send(embed=embed)
+                    else:
+                        embed = Embed(colour=Colour(0x00ff00))
+                        embed.set_author(name="SUCCESS")
+                        embed.add_field(name="Successfully loaded",value=cog1)
+                        await ctx.send(embed=embed)
+                except Exception as e:
+                    embed = Embed(colour=Colour(0xff0000))
+                    embed.set_author(name="ERROR")
+                    embed.add_field(name=type(e).__name__,value=e)
+                    await ctx.send(embed=embed)
+                else:
+                    embed = Embed(colour=Colour(0x00ff00))
+                    embed.set_author(name="SUCCESS")
+                    embed.add_field(name="Successfully loaded",value=cog)
+                    await ctx.send(embed=embed)
+            except Exception as e:
+                trace = traceback.format_exception(type(e), e, e.__traceback__)
+                out = '```'
+                for i in trace:
+                    if len(out+i+'```') > 2000:
+                        await self.bot.channel.send(out+'```')
+                        out = '```'
+                    out += i
+                await self.bot.channel.send(out+'```')
+
+    @commands.command(name='unload')
+    @check
+    async def cog_unload(self, ctx, *cogs):
+        """Command which Unloads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        for cog in cogs:
+            try:
+                try:
+                    self.bot.unload_extension(cog)
+                except ModuleNotFoundError:
+                    cog1 = 'cogs.' + cog
+                    try:
+                        self.bot.unload_extension(cog1)
+                    except Exception as e:
+                        embed = Embed(colour=Colour(0xff0000))
+                        embed.set_author(name="ERROR")
+                        embed.add_field(name=type(e).__name__,value=e)
+                        await ctx.send(embed=embed)
+                    else:
+                        embed = Embed(colour=Colour(0x00ff00))
+                        embed.set_author(name="SUCCESS")
+                        embed.add_field(name="Successfully unloaded",value=cog1)
+                        await ctx.send(embed=embed)
+                except Exception as e:
+                    embed = Embed(colour=Colour(0xff0000))
+                    embed.set_author(name="ERROR")
+                    embed.add_field(name=type(e).__name__,value=e)
+                    await ctx.send(embed=embed)
+                else:
+                    embed = Embed(colour=Colour(0x00ff00))
+                    embed.set_author(name="SUCCESS")
+                    embed.add_field(name="Successfully unloaded",value=cog)
+                    await ctx.send(embed=embed)
+            except Exception as e:
+                trace = traceback.format_exception(type(e), e, e.__traceback__)
+                out = '```'
+                for i in trace:
+                    if len(out+i+'```') > 2000:
+                        await self.bot.channel.send(out+'```')
+                        out = '```'
+                    out += i
+                await self.bot.channel.send(out+'```')
+
+    @commands.command(name='reload')
+    @check
+    async def cog_reload(self, ctx, *cogs):
+        """Command which Reloads a Module.
+        Remember to use dot path. e.g: cogs.owner"""
+        for cog in cogs:
+            try:
+                try:
+                    self.bot.unload_extension(cog)
+                    self.bot.load_extension(cog)
+                except ModuleNotFoundError:
+                    cog1 = 'cogs.' + cog
+                    try:
+                        self.bot.unload_extension(cog1)
+                        self.bot.load_extension(cog1)
+                    except ModuleNotFoundError:
+                        cog = 'cogs.lib.'+cog
+                        try:
+                            mod = imp.import_module(cog)
+                            imp.reload(mod)
+                            embed = Embed(colour=Colour(0x00ff00))
+                        except Exception as e:
+                            embed = Embed(colour=Colour(0xff0000))
+                            embed.set_author(name="ERROR")
+                            embed.add_field(name=type(e).__name__,value=e)
+                            await ctx.send(embed=embed)
+                        else:
+                            embed = Embed(colour=Colour(0x00ff00))
+                            embed.set_author(name="SUCCESS")
+                            embed.add_field(name="Successfully reloaded",value=cog)
+                            await ctx.send(embed=embed)
+                    except Exception as e:
+                        embed = Embed(colour=Colour(0xff0000))
+                        embed.set_author(name="ERROR")
+                        embed.add_field(name=type(e).__name__,value=e)
+                        await ctx.send(embed=embed)
+                    else:
+                        embed = Embed(colour=Colour(0x00ff00))
+                        embed.set_author(name="SUCCESS")
+                        embed.add_field(name="Successfully reloaded",value=cog1)
+                        await ctx.send(embed=embed)
+                except Exception as e:
+                    if type(e).__name__ == 'ClientException' and str(e) == 'extension does not have a setup function':
+                        mod = imp.import_module(cog)
+                        imp.reload(mod)
+                        embed = Embed(colour=Colour(0x00ff00))
+                        embed.set_author(name="SUCCESS")
+                        embed.add_field(name="Successfully reloaded",value=cog)
+                        await ctx.send(embed=embed)
+                    else:
+                        embed = Embed(colour=Colour(0xff0000))
+                        embed.set_author(name="ERROR")
+                        embed.add_field(name=type(e).__name__,value=e)
+                        await ctx.send(embed=embed)
+                else:
+                    embed = Embed(colour=Colour(0x00ff00))
+                    embed.set_author(name="SUCCESS")
+                    embed.add_field(name="Successfully reloaded",value=cog)
+                    await ctx.send(embed=embed)
+            except Exception as e:
+                trace = traceback.format_exception(type(e), e, e.__traceback__)
+                out = '```'
+                for i in trace:
+                    if len(out+i+'```') > 2000:
+                        await self.bot.channel.send(out+'```')
+                        out = '```'
+                    out += i
+                await self.bot.channel.send(out+'```')
+
+    @commands.command(name="stop")
+    @check
+    async def bot_unload(self, ctx):
+        await self.bot.logout()
+    @commands.command(name="update")
+    @check
+    async def bot_update(self, ctx, cog=None):
+        await ctx.send("```"+run(["git", "pull", 'https://github.com/jacc/osu.git'], stdout=PIPE,encoding="ASCII").stdout+"```")
+        if cog:
+            ctx.command = self.cog_reload
+            await ctx.reinvoke()
+    @commands.command()
+    @check
+    async def prefixdebug(self,ctx,guild_id : int, prefix : str):
+        self.bot.prefixes[guild_id] = prefix
+        if prefix == '': del self.bot.prefixes[guild_id]
+        async with aiofiles.open('prefixes.sav','w') as file:
+            await file.write(repr(self.bot.prefixes))
+        guild = self.bot.get_guild(guild_id)
+        await ctx.send(f'Set prefix for {guild.name if guild else "[INVALID SERVER]"} to `{prefix}`')
+    @commands.command()
+    @check
+    async def run(self,ctx,*cmd):
+        await ctx.send("```"+run(cmd, stdout=PIPE,encoding="ASCII",shell=True).stdout+"```")
+def setup(bot):
+    bot.add_cog(OwnerCog(bot))
