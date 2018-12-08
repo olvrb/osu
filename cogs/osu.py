@@ -23,7 +23,8 @@ class Osu:
             embed= discord.Embed()
             embed.color=0xbb1177
             embed.title=f"osu! user - {results[0].username}"
-            embed.add_field(name="user stats", value=f"id: {results[0].user_id}\nlevel: {results[0].level}")
+            embed.add_field(name="user stats", value=f"id: {results[0].user_id}\nlevel: {results[0].level}\ncountry: {results[0].country}\ncountry rank: {results[0].pp_country_rank}")
+            embed.set_footer(f"total plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
     @user.command(name='standard')
