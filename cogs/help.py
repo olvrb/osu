@@ -53,11 +53,7 @@ class Help(formatter.HelpFormatter):
         return self.bot.user.avatar_url_as(format='png')
 
     def colour(self,ctx):
-        try:
-            colour = ctx.bot.profiles[ctx.author.id]['colour']
-        except:
-            colour = 0xbb1177
-        return discord.Colour(colour)
+        return self.bot.colour_for(ctx)
 
 
     async def send(self, dest, content=None, embeds=None):

@@ -9,7 +9,7 @@ import os.path
 from discord.ext import commands
 import config
 from ast import literal_eval
-import traceback
+import traceback, aiofiles
 
 try:
     open('profiles.sav').close()
@@ -57,6 +57,37 @@ class pysu(commands.Bot):
         for ext in self.cog_loads():
             print(f"[+] Loaded cog {ext}")
             self.load_extension(ext)
+    async def save_profiles(self):
+        async with aiofiles.open('profiles.sav') as file:
+            await file.write(repr(self.profiles))
+    async def save_prefixes(self):
+        async with aiofiles.open('prefixes.sav') as file:
+            await file.write(repr(self.prefixes))
+    def colour_for(self,user):
+        try:
+            colour = self.profiles[user.id]['colour']
+        except:
+            colour = 0xbb1177
+        return discord.Colour(colour)
+    def username_for(self,user):
+        try:
+            name = self.profiles[user.id]['username']
+        except:
+            name = user.name
+        return name
+    def profile_for(self,user):
+        try:
+            return self.profiles[user.id]
+        except:
+            return
+    async def modify_profile_for(self,user,key,value):
+        try:
+            profile = self.profiles[user.id]
+        except:
+            profile = {}
+        profile[key] = value
+        self.profiles[user.id] = profile
+        await self.save_profiles()
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.errors.CommandNotFound):
             pass
