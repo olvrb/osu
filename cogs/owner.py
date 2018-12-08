@@ -7,7 +7,7 @@ import importlib as imp, traceback
 
 def check():
     async def pred(ctx):
-        ids = [232948417087668235, 124316478978785283, 131131701148647424]
+        ids = [232948417087668235, 414950697398829077]
         return ctx.author.id in ids
     return commands.check(pred)
 
