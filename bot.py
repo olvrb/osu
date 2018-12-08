@@ -10,8 +10,8 @@ from discord.ext import commands
 import config
 
 
-def prefix_func(bot, msg):
-    return ['osu!']
+async def prefix_func(bot, msg):
+    return ['osu!','pysu!']
 
 
 class pysu(commands.Bot):
