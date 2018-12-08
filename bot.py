@@ -9,7 +9,7 @@ import os.path
 from discord.ext import commands
 import config
 from ast import literal_eval
-
+import traceback
 
 try:
     open('profiles.sav').close()
@@ -57,12 +57,36 @@ class pysu(commands.Bot):
         for ext in self.cog_loads():
             print(f"[+] Loaded cog {ext}")
             self.load_extension(ext)
-
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.errors.CommandNotFound):
+            pass
+        elif isinstance(error, discord.errors.Forbidden):
+            pass
+        elif isinstance(error, commands.errors.CheckFailure):
+            await ctx.send('You do not have permission to use this command.')
+        elif isinstance(error, commands.errors.MissingRequiredArgument):
+            formatter = commands.formatter.HelpFormatter()
+            help = await formatter.format_help_for(ctx, ctx.command)
+            await ctx.send('You are missing required arguments.'+"\n" + help[0])
+        elif isinstance(error, commands.errors.BadArgument):
+            await ctx.send('You have given an invalid argument.')
+        else:
+            await ctx.send('An error occurred in the `{}` command. This has been automatically reported for you.'.format(ctx.command.name))
+            print("Ignoring exception in command {}".format(ctx.command.name))
+            trace = traceback.format_exception(type(error), error, error.__traceback__)
+            out = '```'
+            for i in trace:
+                if len(out+i+'```') > 2000:
+                    await self.channel.send(out+'```')
+                    out = '```'
+                out += i
+            await self.channel.send(out+'```')
     async def on_ready(self):
         print('-'*40)
         print('{:^40}'.format(str(self.user)))
         print('{:^40}'.format(str(self.user.id)))
         print('-'*40)
+        self.channel = self.get_channel(521000713283829768)
 
 
 # Runs the bot.
