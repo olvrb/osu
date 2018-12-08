@@ -27,7 +27,7 @@ except:
 with open('prefixes.sav') as file:
     prefixdata = literal_eval(file.read())
 
-async def prefix_func(bot, msg):
+def prefix_func(bot, msg):
     try:
         extra = bot.prefixes[msg.guild.id]
     except KeyError:
