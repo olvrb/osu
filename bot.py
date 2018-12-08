@@ -8,6 +8,8 @@ import os
 import os.path
 from discord.ext import commands
 import config
+from ast import literal_eval
+
 
 try:
     open('profiles.sav').close()
@@ -15,7 +17,7 @@ except:
     with open('profiles.sav','w') as file:
         file.write('{}')
 with open('profiles.sav') as file:
-    profiledata = file.read()
+    profiledata = literal_eval(file.read())
 
 try:
     open('prefixes.sav').close()
@@ -23,7 +25,7 @@ except:
     with open('prefixes.sav','w') as file:
         file.write('{}')
 with open('prefixes.sav') as file:
-    prefixdata = file.read()
+    prefixdata = literal_eval(file.read())
 
 async def prefix_func(bot, msg):
     try:
