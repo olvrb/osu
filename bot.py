@@ -99,12 +99,11 @@ class pysu(commands.Bot):
         except:
             return
 
-    async def modify_profile_for(self, user,  *  * kwargs):
+    async def modify_profile_for(self, user, **kwargs):
         try:
             profile = self.profiles[user.id]
         except:
-            profile = 
-{}
+            profile = {}
         for key, value in kwargs:
             profile[key] = value
         self.profiles[user.id] = profile
@@ -133,7 +132,7 @@ class pysu(commands.Bot):
                 if len(out + i + '```') > 2000:
                     await self.channel.send(out + '```')
                     out = '```'
-                out + = i
+                out += i
             await self.channel.send(out + '```')
 
     async def on_ready(self):
