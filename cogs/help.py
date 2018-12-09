@@ -52,31 +52,32 @@ class Help(formatter.HelpFormatter):
     def avatar(self):
         return self.bot.user.avatar_url_as(format='png')
 
-    def colour(self,ctx):
+    def colour(self, ctx):
         return self.bot.colour_for(ctx)
-
 
     async def send(self, dest, content=None, embeds=None):
         if len(embeds) == 1:
             embed = embeds[0]
-            embed.set_author(name='osu!bot Help Manual',icon_url=self.bot.user.avatar_url)
+            embed.set_author(name='osu!bot Help Manual',
+                             icon_url=self.bot.user.avatar_url)
             await dest.send(embed=embed)
             return
-        help_msg = await dest.send(embed = embeds[0])
+        help_msg = await dest.send(embed=embeds[0])
         if dest.permissions_for(self.context.me).value & 65600 == 65600 or dest.permissions_for(self.context.me).value & 8 == 8:
             home, back, forward, end = '⏮', '◀', '▶', '⏭'
             stop = '⏹'
-            valid_r = [home,back,forward,end,stop]
+            valid_r = [home, back, forward, end, stop]
             page = 0
             max_page = len(embeds)
             for i in valid_r:
                 await help_msg.add_reaction(i)
             await asyncio.sleep(0.1)
-            def check(reaction,user):
+
+            def check(reaction, user):
                 return reaction.emoji in valid_r and reaction.message.id == help_msg.id
             try:
                 while True:
-                    reaction, user = await self.bot.wait_for('reaction_add',check=check,timeout=120)
+                    reaction, user = await self.bot.wait_for('reaction_add', check=check, timeout=120)
                     try:
                         await help_msg.remove_reaction(reaction, user)
                     except:
@@ -91,7 +92,7 @@ class Help(formatter.HelpFormatter):
                         page = max_page - 1
                     elif reaction.emoji == stop:
                         break
-                    
+
                     page %= max_page
                     await help_msg.edit(embed=embeds[page])
             except:
@@ -99,6 +100,7 @@ class Help(formatter.HelpFormatter):
             await help_msg.delete()
         else:
             page_msg = await dest.send('There are {} help pages. Send a number to see the corresponding page. Send any other message to exit.'.format(len(embeds)))
+
             def is_not_me(msg):
                 if msg.author.id != self.bot.user.id and msg.channel == dest.channel:
                     return True
@@ -119,7 +121,6 @@ class Help(formatter.HelpFormatter):
                     await page_msg.edit(content='Quit help menu.')
                     break
 
-
     @property
     def author(self):
         # Get author dict with username if PM and display name in guild
@@ -128,9 +129,9 @@ class Help(formatter.HelpFormatter):
         else:
             name = self.me.display_name if not '' else self.bot.user.name
         author = {
-                'name': 'osu!bot Help Manual',
-                'icon_url': self.avatar
-            }
+            'name': 'osu!bot Help Manual',
+            'icon_url': self.avatar
+        }
         return author
 
     @property
@@ -144,9 +145,11 @@ class Help(formatter.HelpFormatter):
             if name in command.aliases:
                 # skip aliases
                 continue
-            new_short_doc = command.short_doc.replace('[p]', self.bot.command_prefix(self.bot,self.context)[0])
+            new_short_doc = command.short_doc.replace(
+                '[p]', self.bot.command_prefix(self.bot, self.context)[0])
             if self.is_cog() or self.is_bot():
-                name = '{0}{1}'.format(self.bot.command_prefix(self.bot,self.context)[0], name)
+                name = '{0}{1}'.format(self.bot.command_prefix(
+                    self.bot, self.context)[0], name)
 
             if len(entries + '**{0}**  -  {1}\n'.format(name, new_short_doc)) > 1000:
                 list_entries.append(entries)
@@ -158,7 +161,8 @@ class Help(formatter.HelpFormatter):
     def get_ending_note(self):
         # command_name = self.context.invoked_with
         return "Type {0}help <command> for more info on a command.\n" \
-               "You can also type {0}help <category> for more info on a category.".format(self.bot.command_prefix(self.bot,self.context)[0])
+               "You can also type {0}help <category> for more info on a category.".format(
+                   self.bot.command_prefix(self.bot, self.context)[0])
 
     async def format(self, ctx, command):
         """Formats command for output.
@@ -181,18 +185,22 @@ class Help(formatter.HelpFormatter):
         if isinstance(command, discord.ext.commands.core.Command):
             # <signature portion>
             # emb['embed']['title'] = emb['embed']['description']
-            emb['embed']['description'] = '`Syntax: {0}`'.format(self.get_command_signature())
+            emb['embed']['description'] = '`Syntax: {0}`'.format(
+                self.get_command_signature())
 
             # <long doc> section
             if command.help:
                 name = '{0}'.format(command.help.split('\n\n')[0])
                 name_length = len(name)
-                name = name.replace('[p]', self.bot.command_prefix(self.bot,self.context)[0])
-                value = command.help[name_length:].replace('[p]', self.bot.command_prefix(self.bot,self.context)[0])
+                name = name.replace('[p]', self.bot.command_prefix(
+                    self.bot, self.context)[0])
+                value = command.help[name_length:].replace(
+                    '[p]', self.bot.command_prefix(self.bot, self.context)[0])
                 if value == '':
-                     name = '{0}'.format(command.help.split('\n')[0])
-                     name_length = len(name)
-                     value = command.help[name_length:].replace('[p]', self.bot.command_prefix(self.bot,self.context)[0])
+                    name = '{0}'.format(command.help.split('\n')[0])
+                    name_length = len(name)
+                    value = command.help[name_length:].replace(
+                        '[p]', self.bot.command_prefix(self.bot, self.context)[0])
                 if value == '':
                     value = empty
                 if len(value) > 1024:
@@ -242,7 +250,8 @@ class Help(formatter.HelpFormatter):
                             'inline': False
                         }
                         if count > 0:
-                            field['name'] = category + ' pt. {}'.format(count+1)
+                            field['name'] = category + \
+                                ' pt. {}'.format(count+1)
                         else:
                             field['name'] = category
                         field['value'] = subcommands  # May need paginated
@@ -263,7 +272,7 @@ class Help(formatter.HelpFormatter):
 
         return emb
 
-    async def format_help_for(self, ctx, command_or_bot, reason: str=None):
+    async def format_help_for(self, ctx, command_or_bot, reason: str = None):
         """Formats the help page and handles the actual heavy lifting of how
         the help command looks like. To change the behaviour, override the
         :method:`~.HelpFormatter.format` method.
@@ -287,7 +296,8 @@ class Help(formatter.HelpFormatter):
 
         embeds = []
         embed = discord.Embed(colour=self.colour(ctx), **emb['embed'])
-        embed.set_author(name='osu!bot Help Manual Page 1', icon_url=self.avatar)
+        embed.set_author(name='osu!bot Help Manual Page 1',
+                         icon_url=self.avatar)
         embed.set_footer(**emb['footer'])
         txt = ""
         for field in emb['fields']:
@@ -297,7 +307,8 @@ class Help(formatter.HelpFormatter):
                 txt = field["name"] + field["value"]
                 del embed
                 embed = discord.Embed(colour=self.colour(ctx), **emb['embed'])
-                embed.set_author(name='osu!bot Help Manual Page {}'.format(len(embeds)+1), icon_url=self.avatar)
+                embed.set_author(name='osu!bot Help Manual Page {}'.format(
+                    len(embeds)+1), icon_url=self.avatar)
                 embed.set_footer(**emb['footer'])
             embed.add_field(**field)
         embeds.append(embed)
@@ -307,7 +318,8 @@ class Help(formatter.HelpFormatter):
 
     def simple_embed(self, title=None, description=None, colour=None, author=None):
         # Shortcut
-        embed = discord.Embed(title=title, description=description, colour=colour)
+        embed = discord.Embed(
+            title=title, description=description, colour=colour)
         embed.set_footer(text=self.bot.formatter.get_ending_note())
         if author:
             embed.set_author(**author)
@@ -365,10 +377,10 @@ class Help(formatter.HelpFormatter):
                         return
                 except AttributeError:
                     await self.send(self.destination,
-                                    embeds=[self.simple_embed(title=
-                                                            'Command "{0.name}" has no subcommands.'.format(command),
-                                                            colour=self.colour(ctx),
-                                                            author=self.author)])
+                                    embeds=[self.simple_embed(title='Command "{0.name}" has no subcommands.'.format(command),
+                                                              colour=self.colour(
+                                                                  ctx),
+                                                              author=self.author)])
                     return
 
             await self.bot.formatter.format_help_for(ctx, command)
