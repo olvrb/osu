@@ -22,8 +22,9 @@ class Osu:
             print(f"{results[0]}")
             embed= discord.Embed(colour=self.bot.colour_for(ctx.author))
             embed.title=f"osu! user - {results[0].username}"
-            embed.add_field(name="user stats", value=f"id: {results[0].user_id}\nlevel: {results[0].level}\ncountry: {results[0].country}\ncountry rank: {results[0].pp_country_rank}")
-            embed.set_footer(text=f"total plays: {results[0].playcount}")
+            embed.add_field(name="User Info", value=f"User ID: {results[0].user_id}\nLevel: {results[0].level}\nCountry: {results[0].country}\nAccuracy: {results[0].accuracy}",inline=True)
+            embed.add_field(name="User Stats", value=f"PP: {results[0].pp_raw}\nGlobal Rank: #{results[0].pp_rank}\nCountry Rank: {results[0].pp_country_rank}\n{results[0].count_rank_ss+results[0].count_rank_ssh} SS-ranked plays, {results[0].count_rank_s+results[0].count_rank_sh} S-ranked plays, {results[0].count_rank_a} A-ranked plays",inline=True)
+            embed.set_footer(text=f"Total Plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
     @user.command(name='standard')
