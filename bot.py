@@ -38,10 +38,10 @@ def prefix_func(bot, msg):
         extra = ''
     if extra is not None:
         prefixes = [extra, 'osu!', 'pysu!',
-                    '<@421879566265614337>', ' <@!421879566265614337>']
+                    '<@421879566265614337> ', '<@!421879566265614337> ']
     else:
-        prefixes = ['osu!', 'pysu!', '<@421879566265614337>',
-                    '<@!421879566265614337>']
+        prefixes = ['osu!', 'pysu!', '<@421879566265614337> ',
+                    '<@!421879566265614337> ']
     return prefixes
 
 
@@ -104,12 +104,13 @@ class pysu(commands.Bot):
         except:
             return
 
-    async def modify_profile_for(self, user, key, value):
+    async def modify_profile_for(self, user, **kwargs):
         try:
             profile = self.profiles[user.id]
         except:
             profile = {}
-        profile[key] = value
+        for key,value in kwargs:
+            profile[key] = value
         self.profiles[user.id] = profile
         await self.save_profiles()
 
