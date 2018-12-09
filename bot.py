@@ -68,11 +68,11 @@ class pysu(commands.Bot):
                 print(f"[+] Loaded cog {ext}")
 
     async def save_profiles(self):
-        async with aiofiles.open('profiles.sav') as file:
+        async with aiofiles.open('profiles.sav', 'w') as file:
             await file.write(repr(self.profiles))
 
     async def save_prefixes(self):
-        async with aiofiles.open('prefixes.sav') as file:
+        async with aiofiles.open('prefixes.sav', 'w') as file:
             await file.write(repr(self.prefixes))
 
     def colour_for(self, user, default=0xbb1177):
