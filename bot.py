@@ -75,25 +75,27 @@ class pysu(commands.Bot):
         async with aiofiles.open('prefixes.sav') as file:
             await file.write(repr(self.prefixes))
 
-    def colour_for(self, user):
+    def colour_for(self, user, default=0xbb1177):
         try:
             colour = self.profiles[user.id]['colour']
         except:
-            colour = 0xbb1177
+            colour = default
         return discord.Colour(colour)
 
-    def username_for(self, user):
+    def username_for(self, user, default='INHERITED'):
+        if default == 'INHERITED':
+            default = user.name
         try:
             name = self.profiles[user.id]['username']
         except:
-            name = user.name
+            name = default
         return name
 
-    def mode_for(self, user):
+    def mode_for(self, user, default='osu'):
         try:
             mode = self.profiles[user.id]['mode']
         except:
-            mode = 'osu'
+            mode = default
         return mode
 
     def profile_for(self, user):
