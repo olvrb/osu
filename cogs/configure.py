@@ -38,7 +38,10 @@ class Configure:
 
     @set.command(aliases=['color'])
     async def colour(self, ctx, colour_code):
-        '''Set the colour for embeds and banners. Provide a hex code like `[p]profile set colour #03dc03` or `[p]profile set colour 0088ff` or even `[p]profile set colour 0x123456`'''
+        '''Set the colour for embeds and banners.
+        Provide a hex code like `[p]profile set colour #03dc03` or `[p]profile set colour 0088ff` or even `[p]profile set colour 0x123456`
+        For the default colour, do:
+        [p]profile set colour #bb1177'''
         colour_code = '0'+colour_code.lstrip('0x#')
         await self.bot.modify_profile_for(ctx.author, 'colour', int(colour_code,16))
         await ctx.send('Your profile colour has been set.')
