@@ -16,7 +16,8 @@ try:
     open('profiles.sav').close()
 except:
     with open('profiles.sav', 'w') as file:
-        file.write('{}')
+        file.write('
+{}')
 with open('profiles.sav') as file:
     profiledata = literal_eval(file.read())
 
@@ -24,7 +25,8 @@ try:
     open('prefixes.sav').close()
 except:
     with open('prefixes.sav', 'w') as file:
-        file.write('{}')
+        file.write('
+{}')
 with open('prefixes.sav') as file:
     prefixdata = literal_eval(file.read())
 
@@ -38,7 +40,7 @@ def prefix_func(bot, msg):
         extra = ''
     if extra is not None:
         prefixes = [extra, 'osu!', 'pysu!',
-                    '<@421879566265614337>', '<@!421879566265614337>']
+                    '<@421879566265614337>', ' <@!421879566265614337>']
     else:
         prefixes = ['osu!', 'pysu!', '<@421879566265614337>',
                     '<@!421879566265614337>']
@@ -59,8 +61,14 @@ class pysu(commands.Bot):
         # we can do that in its own cog
 
         for ext in self.cog_loads():
-            print(f"[+] Loaded cog {ext}")
-            self.load_extension(ext)
+            try:
+                self.load_extension(ext)
+            except:
+                traceback.print_exc()
+                print(f'[ ! ] Failed to load cog 
+{ext}')
+            else:
+                print(f"[+] Loaded cog {ext}")
 
     async def save_profiles(self):
         async with aiofiles.open('profiles.sav') as file:
@@ -120,7 +128,8 @@ class pysu(commands.Bot):
         elif isinstance(error, commands.errors.BadArgument):
             await ctx.send('You have given an invalid argument.')
         else:
-            await ctx.send('An error occurred in the `{}` command. This has been automatically reported for you.'.format(ctx.command.name))
+            await ctx.send('An error occurred in the `
+{}` command. This has been automatically reported for you.'.format(ctx.command.name))
             print("Ignoring exception in command {}".format(ctx.command.name))
             trace = traceback.format_exception(
                 type(error), error, error.__traceback__)
@@ -133,10 +142,12 @@ class pysu(commands.Bot):
             await self.channel.send(out+'```')
 
     async def on_ready(self):
-        print('-'*40)
-        print('{:^40}'.format(str(self.user)))
-        print('{:^40}'.format(str(self.user.id)))
-        print('-'*40)
+        print(' - '*40)
+        print('
+{:^40}'.format(str(self.user)))
+        print('
+{:^40}'.format(str(self.user.id)))
+        print(' - '*40)
         self.channel = self.get_channel(521000713283829768)
 
 
