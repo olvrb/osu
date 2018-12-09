@@ -139,9 +139,9 @@ class pysu(commands.Bot):
 
     async def on_ready(self):
         print(' - '*20)
-        print('{:^80}'.format(str(self.user)))
-        print('{:^80}'.format(str(self.user.id)))
-        print(' - '*20)
+        print('{:^75}'.format(str(self.user)))
+        print('{:^75}'.format(str(self.user.id)))
+        print(' - '*25)
         self.channel = self.get_channel(521000713283829768)
 
 
