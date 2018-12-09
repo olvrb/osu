@@ -20,11 +20,10 @@ class Osu:
         results = await self.api.get_user(name) # empty list if not found
         if results:
             print(f"{results[0]}")
-            embed= discord.Embed()
-            embed.color=0xbb1177
+            embed= discord.Embed(colour=self.bot.colour_for(ctx.author))
             embed.title=f"osu! user - {results[0].username}"
             embed.add_field(name="user stats", value=f"id: {results[0].user_id}\nlevel: {results[0].level}\ncountry: {results[0].country}\ncountry rank: {results[0].pp_country_rank}")
-            embed.set_footer(f"total plays: {results[0].playcount}")
+            embed.set_footer(text=f"total plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
     @user.command(name='standard')
