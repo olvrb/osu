@@ -9,12 +9,13 @@ import os.path
 from discord.ext import commands
 import config
 from ast import literal_eval
-import traceback, aiofiles
+import traceback
+import aiofiles
 
 try:
     open('profiles.sav').close()
 except:
-    with open('profiles.sav','w') as file:
+    with open('profiles.sav', 'w') as file:
         file.write('{}')
 with open('profiles.sav') as file:
     profiledata = literal_eval(file.read())
@@ -22,10 +23,11 @@ with open('profiles.sav') as file:
 try:
     open('prefixes.sav').close()
 except:
-    with open('prefixes.sav','w') as file:
+    with open('prefixes.sav', 'w') as file:
         file.write('{}')
 with open('prefixes.sav') as file:
     prefixdata = literal_eval(file.read())
+
 
 def prefix_func(bot, msg):
     try:
@@ -35,9 +37,11 @@ def prefix_func(bot, msg):
     except AttributeError:
         extra = ''
     if extra is not None:
-        prefixes = [extra, 'osu!','pysu!', '<@421879566265614337>', '<@!421879566265614337>']
+        prefixes = [extra, 'osu!', 'pysu!',
+                    '<@421879566265614337>', '<@!421879566265614337>']
     else:
-        prefixes = ['osu!','pysu!', '<@421879566265614337>', '<@!421879566265614337>']
+        prefixes = ['osu!', 'pysu!', '<@421879566265614337>',
+                    '<@!421879566265614337>']
     return prefixes
 
 
@@ -57,30 +61,43 @@ class pysu(commands.Bot):
         for ext in self.cog_loads():
             print(f"[+] Loaded cog {ext}")
             self.load_extension(ext)
+
     async def save_profiles(self):
         async with aiofiles.open('profiles.sav') as file:
             await file.write(repr(self.profiles))
+
     async def save_prefixes(self):
         async with aiofiles.open('prefixes.sav') as file:
             await file.write(repr(self.prefixes))
-    def colour_for(self,user):
+
+    def colour_for(self, user):
         try:
             colour = self.profiles[user.id]['colour']
         except:
             colour = 0xbb1177
         return discord.Colour(colour)
-    def username_for(self,user):
+
+    def username_for(self, user):
         try:
             name = self.profiles[user.id]['username']
         except:
             name = user.name
         return name
-    def profile_for(self,user):
+
+    def mode_for(self, user):
+        try:
+            mode = self.profiles[user.id]['mode']
+        except:
+            mode = 'osu'
+        return mode
+
+    def profile_for(self, user):
         try:
             return self.profiles[user.id]
         except:
             return
-    async def modify_profile_for(self,user,key,value):
+
+    async def modify_profile_for(self, user, key, value):
         try:
             profile = self.profiles[user.id]
         except:
@@ -88,6 +105,7 @@ class pysu(commands.Bot):
         profile[key] = value
         self.profiles[user.id] = profile
         await self.save_profiles()
+
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.errors.CommandNotFound):
             pass
@@ -104,7 +122,8 @@ class pysu(commands.Bot):
         else:
             await ctx.send('An error occurred in the `{}` command. This has been automatically reported for you.'.format(ctx.command.name))
             print("Ignoring exception in command {}".format(ctx.command.name))
-            trace = traceback.format_exception(type(error), error, error.__traceback__)
+            trace = traceback.format_exception(
+                type(error), error, error.__traceback__)
             out = '```'
             for i in trace:
                 if len(out+i+'```') > 2000:
@@ -112,6 +131,7 @@ class pysu(commands.Bot):
                     out = '```'
                 out += i
             await self.channel.send(out+'```')
+
     async def on_ready(self):
         print('-'*40)
         print('{:^40}'.format(str(self.user)))
