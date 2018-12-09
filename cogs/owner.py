@@ -23,7 +23,7 @@ class OwnerCog:
     @commands.command(name='load')
     @check()
     async def cog_load(self, ctx, *cogs):
-        """Unload a cog.
+        """Load a cog.
         Remember to use dot path. e.g: cogs.owner"""
         for cog in cogs:
             try:
