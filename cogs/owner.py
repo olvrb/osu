@@ -194,7 +194,7 @@ class OwnerCog:
         guild = self.bot.get_guild(guild_id)
         await ctx.send(f'Set prefix for {guild.name if guild else "[INVALID SERVER]"} to `{prefix}`')
     @commands.command()
-    @check
+    @check()
     async def run(self,ctx,*cmd):
         await ctx.send("```"+run(cmd, stdout=PIPE,encoding="ASCII",shell=True).stdout+"```")
 def setup(bot):
