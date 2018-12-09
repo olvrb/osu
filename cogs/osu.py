@@ -17,11 +17,11 @@ class Osu:
 
     @commands.group(invoke_without_command=True)
     async def user(self, ctx, *, name):
-        '''Fetch a user's profile'''
+        '''Fetch a user's profile. Usage: osu!user <username> <optional: osu/taiko/maina/fruits>'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])  # empty list if not found
         if results:
-            embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! User: ' +
+            embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! user: ' +
                                   results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
             embed.add_field(
                 name="User Info", value=f"""User ID: {results[0].user_id}
@@ -33,11 +33,9 @@ class Osu:
             a = results[0].count_rank_a
             embed.add_field(name="User Stats", value=f'''PP: {results[0].pp_raw}
             Global Rank: #{results[0].pp_rank}
-            Country Rank: {results[0].pp_country_rank}
-            SS ranks: {ss}
-            S ranks: {s}
-            A ranks: {a}''', inline=True)
-            embed.set_footer(text=f"Total Plays: {results[0].playcount}")
+            Country Rank: #{results[0].pp_country_rank}
+            {ss} SS plays, {s} S plays, {a} A plays''', inline=True)
+            embed.set_footer(text=f"total plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
     @user.command(name='standard')
@@ -56,10 +54,8 @@ class Osu:
             a = results[0].count_rank_a
             embed.add_field(name="User Stats", value=f'''PP: {results[0].pp_raw}
             Global Rank: #{results[0].pp_rank}
-            Country Rank: {results[0].pp_country_rank}
-            SS ranks: {ss}
-            S ranks: {s}
-            A ranks: {a}''', inline=True)
+            Country Rank: #{results[0].pp_country_rank}
+            {ss} SS plays, {s} S plays, {a} A plays''', inline=True)
             embed.set_footer(text=f"Total Plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
@@ -79,10 +75,8 @@ class Osu:
             a = results[0].count_rank_a
             embed.add_field(name="User Stats", value=f'''PP: {results[0].pp_raw}
             Global Rank: #{results[0].pp_rank}
-            Country Rank: {results[0].pp_country_rank}
-            SS ranks: {ss}
-            S ranks: {s}
-            A ranks: {a}''', inline=True)
+            Country Rank: #{results[0].pp_country_rank}
+            S{ss} SS plays, {s} S plays, {a} A plays''', inline=True)
             embed.set_footer(text=f"Total Plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
@@ -102,10 +96,8 @@ class Osu:
             a = results[0].count_rank_a
             embed.add_field(name="User Stats", value=f'''PP: {results[0].pp_raw}
             Global Rank: #{results[0].pp_rank}
-            Country Rank: {results[0].pp_country_rank}
-            SS ranks: {ss}
-            S ranks: {s}
-            A ranks: {a}''', inline=True)
+            Country Rank: #{results[0].pp_country_rank}
+            {ss} SS plays, {s} S plays, {a} A plays''', inline=True)
             embed.set_footer(text=f"Total Plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
@@ -125,16 +117,14 @@ class Osu:
             a = results[0].count_rank_a
             embed.add_field(name="User Stats", value=f'''PP: {results[0].pp_raw}
             Global Rank: #{results[0].pp_rank}
-            Country Rank: {results[0].pp_country_rank}
-            SS ranks: {ss}
-            S ranks: {s}
-            A ranks: {a}''', inline=True)
+            Country Rank: #{results[0].pp_country_rank}
+            {ss} SS plays, {s} S plays, {a} A plays''', inline=True)
             embed.set_footer(text=f"Total Plays: {results[0].playcount}")
             await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True)
     async def banner(self, ctx, *, name):
-        '''Fetch a user's profile as a banner PNG'''
+        '''Fetch a user's profile as a banner.'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])
         if results:
