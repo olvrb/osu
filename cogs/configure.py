@@ -21,7 +21,7 @@ class Configure:
                 embed = discord.Embed(
                     colour=colour, title=f'Profile for {target.name}')
                 embed.add_field(
-                    name='User Colour', value='Unset' if 'colour' not in prof else '#'+prof['colour'])
+                    name='User Colour', value='Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:])
                 embed.add_field(name='osu! Username',
                                 value=prof.get('username') or 'Unset')
                 embed.add_field(name='Default osu! Mode',
