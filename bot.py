@@ -141,7 +141,7 @@ class pysu(commands.Bot):
             await self.channel.send(out+'```')
 
     async def on_ready(self):
-        print(' - '*20)
+        print(' - '*25)
         print('{:^75}'.format(str(self.user)))
         print('{:^75}'.format(str(self.user.id)))
         print(' - '*25)
