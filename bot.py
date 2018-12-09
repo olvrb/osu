@@ -1,8 +1,3 @@
-# The current Yak edition of Jailbreak Bot.
-# Y'all can use this
-# Boonk Gang by jacc
-
-# Imports
 import discord
 import os
 import os.path
@@ -15,17 +10,17 @@ import aiofiles
 try:
     open('profiles.sav').close()
 except:
-    with open('profiles.sav', 'w') as file:
+    with open('profiles.sav', 'w')as file:
         file.write('{}')
-with open('profiles.sav') as file:
+with open('profiles.sav')as file:
     profiledata = literal_eval(file.read())
 
 try:
     open('prefixes.sav').close()
 except:
-    with open('prefixes.sav', 'w') as file:
+    with open('prefixes.sav', 'w')as file:
         file.write('{}')
-with open('prefixes.sav') as file:
+with open('prefixes.sav')as file:
     prefixdata = literal_eval(file.read())
 
 
@@ -37,10 +32,10 @@ def prefix_func(bot, msg):
     except AttributeError:
         extra = ''
     if extra is not None:
-        prefixes = [extra, 'osu!', 'pysu!',
+        prefixes = [extra, 'osu!', 'pysu!', 
                     '<@421879566265614337> ', '<@!421879566265614337> ']
     else:
-        prefixes = ['osu!', 'pysu!', '<@421879566265614337> ',
+        prefixes = ['osu!', 'pysu!', '<@421879566265614337> ', 
                     '<@!421879566265614337> ']
     return prefixes
 
@@ -48,13 +43,13 @@ def prefix_func(bot, msg):
 class pysu(commands.Bot):
 
     def cog_loads(self):
-        return ["cogs." + filename[:-3] for filename in os.listdir('cogs') if os.path.isfile(os.path.join("cogs", filename)) and filename.endswith('.py')]
+        return ["cogs." + filename[:-3] for filename in os.listdir('cogs')if os.path.isfile(os.path.join("cogs", filename))and filename.endswith('.py')]
 
     def __init__(self):
         self.version = 1.0
         self.profiles = profiledata
         self.prefixes = prefixdata
-        super().__init__(command_prefix=prefix_func)
+        super().__init__(command_prefix = prefix_func)
         # self.remove_command("help")
         # we can do that in its own cog
 
@@ -68,21 +63,21 @@ class pysu(commands.Bot):
                 print(f"[+] Loaded cog {ext}")
 
     async def save_profiles(self):
-        async with aiofiles.open('profiles.sav', 'w') as file:
+        async with aiofiles.open('profiles.sav', 'w')as file:
             await file.write(repr(self.profiles))
 
     async def save_prefixes(self):
-        async with aiofiles.open('prefixes.sav', 'w') as file:
+        async with aiofiles.open('prefixes.sav', 'w')as file:
             await file.write(repr(self.prefixes))
 
-    def colour_for(self, user, default=0xbb1177):
+    def colour_for(self, user, default = 0xbb1177):
         try:
             colour = self.profiles[user.id]['colour']
         except:
             colour = default
         return discord.Colour(colour)
 
-    def username_for(self, user, default='INHERITED'):
+    def username_for(self, user, default = 'INHERITED'):
         if default == 'INHERITED':
             default = user.name
         try:
@@ -91,7 +86,7 @@ class pysu(commands.Bot):
             name = default
         return name
 
-    def mode_for(self, user, default='osu'):
+    def mode_for(self, user, default = 'osu'):
         try:
             mode = self.profiles[user.id]['mode']
         except:
@@ -104,12 +99,13 @@ class pysu(commands.Bot):
         except:
             return
 
-    async def modify_profile_for(self, user, **kwargs):
+    async def modify_profile_for(self, user,  *  * kwargs):
         try:
             profile = self.profiles[user.id]
         except:
-            profile = {}
-        for key,value in kwargs:
+            profile = 
+{}
+        for key, value in kwargs:
             profile[key] = value
         self.profiles[user.id] = profile
         await self.save_profiles()
@@ -124,7 +120,7 @@ class pysu(commands.Bot):
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             formatter = commands.formatter.HelpFormatter()
             help = await formatter.format_help_for(ctx, ctx.command)
-            await ctx.send('You are missing required arguments.'+"\n" + help[0])
+            await ctx.send('You are missing required arguments.' + "\n" + help[0])
         elif isinstance(error, commands.errors.BadArgument):
             await ctx.send('You have given an invalid argument.')
         else:
@@ -134,21 +130,23 @@ class pysu(commands.Bot):
                 type(error), error, error.__traceback__)
             out = '```'
             for i in trace:
-                if len(out+i+'```') > 2000:
-                    await self.channel.send(out+'```')
+                if len(out + i + '```') > 2000:
+                    await self.channel.send(out + '```')
                     out = '```'
-                out += i
-            await self.channel.send(out+'```')
+                out + = i
+            await self.channel.send(out + '```')
 
     async def on_ready(self):
-        print(' - '*25)
+        print(' - ' * 25)
         print('{:^75}'.format(str(self.user)))
         print('{:^75}'.format(str(self.user.id)))
-        print(' - '*25)
+        print(' - ' * 25)
         self.channel = self.get_channel(521000713283829768)
 
 
-# Runs the bot.
+@bot.command(name = "ping", aliases = ['latency'])
+async def latency(self, ctx):
+    return await ctx.send(f"⏱ `{round(self.bot.latency*1000)}ms`")
 bot = pysu()
 if __name__ == "__main__":
     bot.run(config.token)
