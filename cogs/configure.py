@@ -43,8 +43,77 @@ class Configure:
         For the default colour, do:
         [p]profile set colour #bb1177'''
         colour_code = '0'+colour_code.lstrip('0x#')
-        await self.bot.modify_profile_for(ctx.author, 'colour', int(colour_code,16))
-        await ctx.send('Your profile colour has been set.')
+        try:
+            await self.bot.modify_profile_for(ctx.author, 'colour', int(colour_code, 16))
+            await ctx.send('Your profile colour has been set.')
+        except:
+            await ctx.send('That colour code is invalid.')
+
+    @set.command(aliases=['name'])
+    async def username(self, ctx, *, username):
+        '''Set your osu! username.
+        Also sets the default user for [p]user and [p]banner.
+        To make your osu! username the same as your Discord username, do:
+        [p]profile set username INHERITED
+        '''
+        await self.bot.modify_profile_for(ctx.author, 'username', username)
+        await ctx.send('Your osu! username has been set.')
+
+    @set.command(aliases=['defaultmode'])
+    async def mode(self, ctx, default_mode):
+        '''Set your preferred mode.
+        Also sets the default mode for [p]user and [p]banner.
+        Options:
+        ­ osu!standard:
+        ­  - osu
+        ­  - osu!std
+        ­  - osu!standard
+        ­  - std
+        ­  - standard
+        ­  - 0
+        ­ osu!taiko:
+        ­  - taiko
+        ­  - osu!taiko
+        ­  - 1
+        ­ osu!mania:
+        ­  - mania
+        ­  - osu!mania
+        ­  - 2
+        ­ osu!catch:
+        ­  - catch
+        ­  - ctb
+        ­  - fruits
+        ­  - osu!catch
+        ­  - osu!ctb
+        ­  - osu!fruits
+        ­  - 3
+        '''
+        bindings = {
+            'osu': 'osu',
+            'osu!std': 'osu',
+            'osu!standard': 'osu',
+            'std': 'osu',
+            'standard': 'osu',
+            '0': 'osu',
+            'taiko': 'taiko',
+            'osu!taiko': 'taiko',
+            '1': 'taiko',
+            'mania': 'mania',
+            'osu!mania': 'mania',
+            '2': 'mania',
+            'catch': 'fruits',
+            'ctb': 'fruits',
+            'fruits': 'fruits',
+            'osu!catch': 'fruits',
+            'osu!ctb': 'fruits',
+            'osu!fruits': 'fruits',
+            '3': 'fruits',
+        }
+        if default_mode in bindings:
+            await self.bot.modify_profile_for(ctx.author,'mode',bindings[default_mode])
+            await ctx.send('Your default mode has been set.')
+        else:
+            await ctx.send('That is not a valid mode.')
 
 
 def setup(bot):
