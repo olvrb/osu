@@ -44,7 +44,10 @@ class Configure:
         [p]profile set colour #bb1177'''
         colour_code = '0'+colour_code.lstrip('0x#')
         try:
-            await self.bot.modify_profile_for(ctx.author, 'colour', int(colour_code, 16))
+            colour = int(colour_code, 16)
+            if colour > 0xffffff:
+                raise Exception
+            await self.bot.modify_profile_for(ctx.author, colour=colour)
             await ctx.send('Your profile colour has been set.')
         except:
             await ctx.send('That colour code is invalid.')
@@ -56,7 +59,7 @@ class Configure:
         To make your osu! username the same as your Discord username, do:
         [p]profile set username INHERITED
         '''
-        await self.bot.modify_profile_for(ctx.author, 'username', username)
+        await self.bot.modify_profile_for(ctx.author, username=username)
         await ctx.send('Your osu! username has been set.')
 
     @set.command(aliases=['defaultmode'])
@@ -110,7 +113,7 @@ class Configure:
             '3': 'fruits',
         }
         if default_mode in bindings:
-            await self.bot.modify_profile_for(ctx.author,'mode',bindings[default_mode])
+            await self.bot.modify_profile_for(ctx.author, mode=bindings[default_mode])
             await ctx.send('Your default mode has been set.')
         else:
             await ctx.send('That is not a valid mode.')
