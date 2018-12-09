@@ -23,7 +23,7 @@ class OwnerCog:
     @commands.command(name='load')
     @check()
     async def cog_load(self, ctx, *cogs):
-        """Command which Loads a Module.
+        """Unload a cog.
         Remember to use dot path. e.g: cogs.owner"""
         for cog in cogs:
             try:
@@ -66,7 +66,7 @@ class OwnerCog:
     @commands.command(name='unload')
     @check()
     async def cog_unload(self, ctx, *cogs):
-        """Command which Unloads a Module.
+        """Unload a cog.
         Remember to use dot path. e.g: cogs.owner"""
         for cog in cogs:
             try:
@@ -110,7 +110,7 @@ class OwnerCog:
     @commands.command(name='reload')
     @check()
     async def cog_reload(self, ctx, *cogs):
-        """Command which Reloads a Module.
+        """Reload a cog.
         Remember to use dot path. e.g: cogs.owner"""
         for cog in cogs:
             try:
@@ -182,11 +182,15 @@ class OwnerCog:
     @commands.command(name="stop")
     @check()
     async def bot_unload(self, ctx):
+        """Stop the bot.
+        Remember to use dot path. e.g: cogs.owner"""
         await self.bot.logout()
 
     @commands.command(name="update")
     @check()
     async def bot_update(self, ctx, cog=None):
+        """Pull most recent commit from GitHub.
+        Remember to use dot path. e.g: cogs.owner"""
         await ctx.send("```"+run(["git", "pull", 'https://github.com/jacc/osu.git'], stdout=PIPE, encoding="ASCII").stdout+"```")
         if cog:
             ctx.command = self.cog_reload
@@ -195,6 +199,8 @@ class OwnerCog:
     @commands.command()
     @check()
     async def prefixdebug(self, ctx, guild_id: int, prefix: str):
+        """Prefix debug function.
+        Remember to use dot path. e.g: cogs.owner"""
         self.bot.prefixes[guild_id] = prefix
         if prefix == '':
             del self.bot.prefixes[guild_id]
@@ -205,6 +211,8 @@ class OwnerCog:
     @commands.command()
     @check()
     async def run(self, ctx, *cmd):
+        """Run command.
+        Remember to use dot path. e.g: cogs.owner"""
         await ctx.send("```"+run(cmd, stdout=PIPE, encoding="ASCII", shell=True).stdout+"```")
 
 
