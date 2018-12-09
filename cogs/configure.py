@@ -117,6 +117,28 @@ class Configure:
             await ctx.send('Your default mode has been set.')
         else:
             await ctx.send('That is not a valid mode.')
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def setprefix(self,ctx,newprefix):
+        '''Sets the server's custom prefix (the original will still work under most circumstances). Requires the Manage Server permission. To use spaces in your prefix quote it.
+        You can even use a space at the end of the prefix.
+        
+        Example 1 (no spaces):
+        [p]setprefix osu|
+        Example 2 (with trailing space):
+        [p]setprefix "osu "
+        
+        To remove your server's prefix:
+        [p]setprefix ""'''
+        newprefix = newprefix.lstrip(' ')
+        if len(newprefix) > 10:
+            return await ctx.send('In order to prevent abuse to my disk, the custom prefix length has been capped at 10. Sorry!')
+        add = ('removed' if newprefix == '' else f'changed to `{newprefix}`') if ctx.guild.id in self.bot.prefixes else f'set to `{newprefix}`'
+        outmsg = f'Your server\'s custom prefix has been {add}'
+        self.bot.prefixes[ctx.guild.id] = newprefix
+        if newprefix == '': del self.bot.prefixes[ctx.guild.id]
+        await self.bot.save_prefixes()
+        await ctx.send(outmsg)
 
 
 def setup(bot):
