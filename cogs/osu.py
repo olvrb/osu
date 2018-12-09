@@ -17,6 +17,7 @@ class Osu:
 
     @commands.group(invoke_without_command=True)
     async def user(self, ctx, *, name):
+        '''Fetch a user's profile'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])  # empty list if not found
         if results:
@@ -133,6 +134,7 @@ class Osu:
 
     @commands.group(invoke_without_command=True)
     async def banner(self, ctx, *, name):
+        '''Fetch a user's profile as a banner PNG'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])
         if results:
