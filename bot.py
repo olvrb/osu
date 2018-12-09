@@ -143,9 +143,9 @@ class pysu(commands.Bot):
         self.channel = self.get_channel(521000713283829768)
 
 
+bot = pysu()
 @bot.command(name = "ping", aliases = ['latency'])
 async def latency(self, ctx):
     return await ctx.send(f"⏱ `{round(self.bot.latency*1000)}ms`")
-bot = pysu()
 if __name__ == "__main__":
     bot.run(config.token)
