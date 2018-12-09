@@ -22,7 +22,7 @@ class Osu:
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])  # empty list if not found
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! User: ' +
-                                  results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/osu')
+                                  results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
             embed.add_field(
                 name="User Info", value=f"""User ID: {results[0].user_id}
                 Level: {int(results[0].level)}
@@ -139,8 +139,8 @@ class Osu:
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])
         if results:
             embed = discord.Embed(colour=discord.Colour(
-                0xbb1177), title=results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/osu')
-            embed.set_image(url=self.banner_url(0, name))
+                0xbb1177), title=results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
+            embed.set_image(url=self.banner_url({'osu':0,'taiko':1,'mania':2,'fruits':3}[mode], name))
             await ctx.send(embed=embed)
 
     @banner.command(name='standard')
