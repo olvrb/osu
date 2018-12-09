@@ -19,7 +19,7 @@ class OwnerCog:
     
     # Hidden means it won't show up on the default help.
     @commands.command(name='load')
-    @check
+    @check()
     async def cog_load(self, ctx, *cogs):
         """Command which Loads a Module.
         Remember to use dot path. e.g: cogs.owner"""
@@ -62,7 +62,7 @@ class OwnerCog:
                 await self.bot.channel.send(out+'```')
 
     @commands.command(name='unload')
-    @check
+    @check()
     async def cog_unload(self, ctx, *cogs):
         """Command which Unloads a Module.
         Remember to use dot path. e.g: cogs.owner"""
@@ -105,7 +105,7 @@ class OwnerCog:
                 await self.bot.channel.send(out+'```')
 
     @commands.command(name='reload')
-    @check
+    @check()
     async def cog_reload(self, ctx, *cogs):
         """Command which Reloads a Module.
         Remember to use dot path. e.g: cogs.owner"""
@@ -174,18 +174,18 @@ class OwnerCog:
                 await self.bot.channel.send(out+'```')
 
     @commands.command(name="stop")
-    @check
+    @check()
     async def bot_unload(self, ctx):
         await self.bot.logout()
     @commands.command(name="update")
-    @check
+    @check()
     async def bot_update(self, ctx, cog=None):
         await ctx.send("```"+run(["git", "pull", 'https://github.com/jacc/osu.git'], stdout=PIPE,encoding="ASCII").stdout+"```")
         if cog:
             ctx.command = self.cog_reload
             await ctx.reinvoke()
     @commands.command()
-    @check
+    @check()
     async def prefixdebug(self,ctx,guild_id : int, prefix : str):
         self.bot.prefixes[guild_id] = prefix
         if prefix == '': del self.bot.prefixes[guild_id]
