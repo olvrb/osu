@@ -6,7 +6,6 @@ import config
 from urllib.parse import quote
 from lib import converters
 
-
 class Osu:
 
     def __init__(self, bot):
@@ -18,10 +17,9 @@ class Osu:
 
     @commands.group(invoke_without_command=True)
     async def user(self, ctx, *, name: converters.player):
-        '''Fetch a user's profile. Usage: osu!user <username> <optional: osu/taiko/mania/fruits>'''
+        '''Fetch a user's profile. Usage: osu!user <username> <optional: osu/taiko/maina/fruits>'''
         mode = self.bot.mode_for(ctx.author)
-        # empty list if not found
-        results = await self.api.get_user(name, mode={'osu': enums.OsuMode.osu, 'taiko': enums.OsuMode.taiko, 'mania': enums.OsuMode.mania, 'fruits': enums.OsuMode.ctb}[mode])
+        results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])  # empty list if not found
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! user: ' +
                                   results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
@@ -128,7 +126,7 @@ class Osu:
     async def banner(self, ctx, *, name: converters.player):
         '''Fetch a user's profile as a banner.'''
         mode = self.bot.mode_for(ctx.author)
-        results = await self.api.get_user(name, mode={'osu': enums.OsuMode.osu, 'taiko': enums.OsuMode.taiko, 'mania': enums.OsuMode.mania, 'fruits': enums.OsuMode.ctb}[mode])
+        results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title=results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
             embed.set_image(url=self.banner_url(

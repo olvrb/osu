@@ -1,2 +1,0 @@
-token = "NDIxODc5NTY2MjY1NjE0MzM3.Du14qQ.pm7NeutAm0i_9PfF3qiDWeS_5sI"
-osu = "7520b4755cfd7161b3da85be693bea51e49ba412"
