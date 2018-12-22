@@ -118,6 +118,10 @@ locale = {
                     'set': 'Your default mode has been set.',
                     'invalid': 'That is not a valid mode.'
                 },
+                'locale': {
+                    'help': 'Set your locale. If not found or unset, defaults to EN',
+                    'set': 'Your locale has been set to `{}`, but this does not guarantee a translation'
+                }
             }
         },
         'setprefix': {
