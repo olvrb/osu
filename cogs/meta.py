@@ -29,7 +29,7 @@ class Meta:
             resp = await session.get('https://api.github.com/repos/jacc/osu/commits')
             my_json = await resp.json()
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title=self.bot.translate_for(ctx.author,'meta.stats.title'))
-            embed.add_field(name=self.bot.translate_for(ctx.author,'meta.stats.commit'), value=self.bot.translate_for(ctx.author,'meta.stats.message').format(my_json[0]['sha'],my_json[0]['commit']['author']['name'],my_json[0]['commit']['message']}))
+            embed.add_field(name=self.bot.translate_for(ctx.author,'meta.stats.commit'), value=self.bot.translate_for(ctx.author,'meta.stats.message').format(my_json[0]['sha'],my_json[0]['commit']['author']['name'],my_json[0]['commit']['message']))
             return await ctx.send(embed=embed)
 
 def setup(bot):
