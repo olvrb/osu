@@ -116,6 +116,11 @@ class Configure:
             await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.mode.set'))
         else:
             await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.mode.invalid'))
+    @set.command(help='configure.profile.set.locale.help')
+    async def locale(self,ctx,locale:str):
+        locale = locale.lower()
+        await self.bot.modify_profile_for(ctx.author,locale=locale)
+        awaif ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.locale.set').format(locale.upper()))
     @commands.command(help='configure.setprefix.help')
     @commands.has_permissions(manage_guild=True)
     async def setprefix(self,ctx,newprefix):
