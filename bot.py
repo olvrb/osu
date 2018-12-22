@@ -78,6 +78,8 @@ class pysu(commands.Bot):
         return discord.Colour(colour)
 
     def username_for(self, user, default = 'INHERITED'):
+        if not user:
+            return
         if default == 'INHERITED':
             default = user.name
         try:

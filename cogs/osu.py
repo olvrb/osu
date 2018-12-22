@@ -4,7 +4,7 @@ import requests
 from osuapi import OsuApi, AHConnector, enums
 import config
 from urllib.parse import quote
-
+from lib import converters
 
 class Osu:
 
@@ -16,7 +16,7 @@ class Osu:
         return f'https://lemmmy.pw/osusig/sig.php?colour=hex{colour}&mode={mode}&uname={quote(user)}&pp=2&countryrank&flagstroke&darktriangles&onlineindicator=undefined&xpbar&xpbarhex'
 
     @commands.group(invoke_without_command=True)
-    async def user(self, ctx, *, name):
+    async def user(self, ctx, *, name: converters.player):
         '''Fetch a user's profile. Usage: osu!user <username> <optional: osu/taiko/maina/fruits>'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])  # empty list if not found
@@ -39,7 +39,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @user.command(name='standard')
-    async def osu(self, ctx, *, name):
+    async def osu(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name)
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! User: ' +
@@ -60,7 +60,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @user.command()
-    async def taiko(self, ctx, *, name):
+    async def taiko(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.taiko)
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu!taiko User: ' +
@@ -81,7 +81,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @user.command()
-    async def mania(self, ctx, *, name):
+    async def mania(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.mania)
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu!mania User: ' +
@@ -102,7 +102,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @user.command(aliases=['ctb','fruits'])
-    async def catch(self, ctx, *, name):
+    async def catch(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.ctb)
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu! User: ' +
@@ -123,7 +123,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True)
-    async def banner(self, ctx, *, name):
+    async def banner(self, ctx, *, name: converters.player):
         '''Fetch a user's profile as a banner.'''
         mode = self.bot.mode_for(ctx.author)
         results = await self.api.get_user(name,mode={'osu':enums.OsuMode.osu,'taiko':enums.OsuMode.taiko,'mania':enums.OsuMode.mania,'fruits':enums.OsuMode.ctb}[mode])
@@ -134,7 +134,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @banner.command(name='standard')
-    async def osu_(self, ctx, *, name):
+    async def osu_(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name)
         if results:
             embed = discord.Embed(colour=discord.Colour(
@@ -143,7 +143,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @banner.command(name='taiko')
-    async def taiko_(self, ctx, *, name):
+    async def taiko_(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.taiko)
         if results:
             embed = discord.Embed(colour=discord.Colour(
@@ -152,7 +152,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @banner.command(name='mania')
-    async def mania_(self, ctx, *, name):
+    async def mania_(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.mania)
         if results:
             embed = discord.Embed(colour=discord.Colour(
@@ -161,7 +161,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @banner.command(name='catch',aliases=['ctb','fruits'])
-    async def catch_(self, ctx, *, name):
+    async def catch_(self, ctx, *, name: converters.player):
         results = await self.api.get_user(name, mode=enums.OsuMode.ctb)
         if results:
             embed = discord.Embed(colour=discord.Colour(
