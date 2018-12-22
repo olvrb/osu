@@ -45,10 +45,10 @@ class Configure:
         try:
             colour = int(colour_code, 16)
             if colour > 0xffffff:
-                raise Exception
+                raise ValueError
             await self.bot.modify_profile_for(ctx.author, colour=colour)
             await ctx.send('Your profile colour has been set.')
-        except:
+        except ValueError:
             await ctx.send('That colour code is invalid.')
 
     @set.command(aliases=['name'])
