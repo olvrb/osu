@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
-
+from lib import converters
 
 class Configure:
     def __init__(self, bot):
         self.bot = bot
 
     @commands.group(invoke_without_command=True)
-    async def profile(self, ctx, target: discord.Member = None):
+    async def profile(self, ctx, target: converters.target):
         '''Show the profile of you or another user. Modify it with [p]profile set'''
         if ctx.invoked_subcommand is None:
             if target is None:
