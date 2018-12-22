@@ -13,7 +13,7 @@ class Osu:
         self.bot = bot
 
     def banner_url(self, mode, user, colour='bb1177'):
-        return f'https://lemmmy.pw/osusig/sig.php?colour=hex{colour}&mode={mode}&uname={quote(user)}&pp=2&countryrank&flagstroke&darktriangles&onlineindicator=undefined&xpbar&xpbarhex'
+        return f'https://lemmmy.pw/osusig/sig.php?colour=hex{colour:0>6}&mode={mode}&uname={quote(user)}&pp=2&countryrank&flagstroke&darktriangles&onlineindicator=undefined&xpbar&xpbarhex'
 
     @commands.group(invoke_without_command=True)
     async def user(self, ctx, *, name: converters.player):
@@ -130,6 +130,8 @@ class Osu:
         if results:
             embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title=results[0].username, url=f'https://osu.ppy.sh/users/{results[0].user_id}/{mode}')
             embed.set_image(url=self.banner_url(
+                {'osu': 0, 'taiko': 1, 'mania': 2, 'fruits': 3}[mode], name, hex(self.bot.colour_for(ctx.author).value)[2:]))
+            print(self.banner_url(
                 {'osu': 0, 'taiko': 1, 'mania': 2, 'fruits': 3}[mode], name, hex(self.bot.colour_for(ctx.author).value)[2:]))
             await ctx.send(embed=embed)
 

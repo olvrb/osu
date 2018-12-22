@@ -106,7 +106,7 @@ class pysu(commands.Bot):
             profile = self.profiles[user.id]
         except:
             profile = {}
-        for key, value in kwargs:
+        for key, value in kwargs.items():
             profile[key] = value
         self.profiles[user.id] = profile
         await self.save_profiles()
