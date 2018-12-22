@@ -144,8 +144,5 @@ class pysu(commands.Bot):
 
 
 bot = pysu()
-
-    
-bot = pysu()
 if __name__ == "__main__":
     bot.run(config.token)
