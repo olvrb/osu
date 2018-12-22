@@ -58,7 +58,7 @@ class Help(formatter.HelpFormatter):
     async def send(self, dest, content=None, embeds=None):
         if len(embeds) == 1:
             embed = embeds[0]
-            embed.set_author(name='osu!bot Help Manual',
+            embed.set_author(name=self.bot.translate_for(self.context.author,'help.help.header'),
                              icon_url=self.bot.user.avatar_url)
             await dest.send(embed=embed)
             return
@@ -99,7 +99,7 @@ class Help(formatter.HelpFormatter):
                 pass
             await help_msg.delete()
         else:
-            page_msg = await dest.send('There are {} help pages. Send a number to see the corresponding page. Send any other message to exit.'.format(len(embeds)))
+            page_msg = await dest.send(self.bot.translate_for(self.context.author,'help.help.page_msg').format(len(embeds)))
 
             def is_not_me(msg):
                 if msg.author.id != self.bot.user.id and msg.channel == dest.channel:
@@ -118,7 +118,7 @@ class Help(formatter.HelpFormatter):
                     except:
                         pass
                 except ValueError:
-                    await page_msg.edit(content='Quit help menu.')
+                    await page_msg.edit(content=self.bot.translate_for(self.context.author,'help.help.quit'))
                     break
 
     @property
@@ -129,7 +129,7 @@ class Help(formatter.HelpFormatter):
         else:
             name = self.me.display_name if not '' else self.bot.user.name
         author = {
-            'name': 'osu!bot Help Manual',
+            'name': self.bot.translate_for(self.context.author,'help.help.header'),
             'icon_url': self.avatar
         }
         return author
@@ -145,7 +145,7 @@ class Help(formatter.HelpFormatter):
             if name in command.aliases:
                 # skip aliases
                 continue
-            new_short_doc = command.short_doc.replace(
+            new_short_doc = self.bot.translate_for(self.context.author,command.short_doc).replace(
                 '[p]', self.bot.command_prefix(self.bot, self.context)[0])
             if self.is_cog() or self.is_bot():
                 name = '{0}{1}'.format(self.bot.command_prefix(
@@ -160,8 +160,7 @@ class Help(formatter.HelpFormatter):
 
     def get_ending_note(self):
         # command_name = self.context.invoked_with
-        return "Type {0}help <command> for more info on a command.\n" \
-               "You can also type {0}help <category> for more info on a category.".format(
+        return self.bot.translate_for(self.context.author,'help.help.footer').format(
                    self.bot.command_prefix(self.bot, self.context)[0])
 
     async def format(self, ctx, command):
@@ -174,7 +173,7 @@ class Help(formatter.HelpFormatter):
         emb = {
             'embed': {
                 'title': '',
-                'description': 'osu!bot\'s commands',
+                'description': self.bot.translate_for(self.context.author,'help.help.description'),
             },
             'footer': {
                 'text': self.get_ending_note()
@@ -185,21 +184,21 @@ class Help(formatter.HelpFormatter):
         if isinstance(command, discord.ext.commands.core.Command):
             # <signature portion>
             # emb['embed']['title'] = emb['embed']['description']
-            emb['embed']['description'] = '`Syntax: {0}`'.format(
+            emb['embed']['description'] = self.bot.translate_for(self.context.author,'help.help.syntax').format(
                 self.get_command_signature())
 
             # <long doc> section
             if command.help:
-                name = '{0}'.format(command.help.split('\n\n')[0])
+                name = '{0}'.format(self.bot.translate_for(self.context.author,command.help).split('\n\n')[0])
                 name_length = len(name)
                 name = name.replace('[p]', self.bot.command_prefix(
                     self.bot, self.context)[0])
-                value = command.help[name_length:].replace(
+                value = self.bot.translate_for(self.context.author,command.help)[name_length:].replace(
                     '[p]', self.bot.command_prefix(self.bot, self.context)[0])
                 if value == '':
-                    name = '{0}'.format(command.help.split('\n')[0])
+                    name = '{0}'.format(self.bot.translate_for(self.context.author,command.help).split('\n')[0])
                     name_length = len(name)
-                    value = command.help[name_length:].replace(
+                    value = self.bot.translate_for(self.context.author,command.help)[name_length:].replace(
                         '[p]', self.bot.command_prefix(self.bot, self.context)[0])
                 if value == '':
                     value = empty
@@ -232,7 +231,7 @@ class Help(formatter.HelpFormatter):
         def category(tup):
             # Turn get cog (Category) name from cog/list tuples
             cog = tup[1].cog_name
-            return '**__{0}:__**'.format(cog) if cog is not None else '**__\u200bNo Category:__**'
+            return '**__{0}:__**'.format(cog) if cog is not None else self.bot.translate_for(self.context.author,'help.help.no_category')
 
         # Get subcommands for bot or category
         filtered = await self.filter_command_list()
@@ -263,7 +262,7 @@ class Help(formatter.HelpFormatter):
             if filtered:
                 for subcommands in await self._add_subcommands(filtered):
                     field = {
-                        'name': '**__Commands:__**' if not self.is_bot() and self.is_cog() else '**__Subcommands:__**',
+                        'name': self.bot.translate_for(self.context.author,'help.help.commands') if not self.is_bot() and self.is_cog() else self.bot.translate_for(self.context.author,'help.help.subcommands'),
                         'value': subcommands,  # May need paginated
                         'inline': False
                     }
@@ -296,7 +295,7 @@ class Help(formatter.HelpFormatter):
 
         embeds = []
         embed = discord.Embed(colour=self.colour(ctx), **emb['embed'])
-        embed.set_author(name='osu!bot Help Manual Page 1',
+        embed.set_author(name=self.bot.translate_for(self.context.author,'help.help.header_with_page').format(1),
                          icon_url=self.avatar)
         embed.set_footer(**emb['footer'])
         txt = ""
@@ -307,7 +306,7 @@ class Help(formatter.HelpFormatter):
                 txt = field["name"] + field["value"]
                 del embed
                 embed = discord.Embed(colour=self.colour(ctx), **emb['embed'])
-                embed.set_author(name='osu!bot Help Manual Page {}'.format(
+                embed.set_author(name=self.bot.translate_for(self.context.author,'help.help.header_with_page').format(
                     len(embeds)+1), icon_url=self.avatar)
                 embed.set_footer(**emb['footer'])
             embed.add_field(**field)
@@ -328,11 +327,11 @@ class Help(formatter.HelpFormatter):
     def cmd_not_found(self, cmd, colour=0):
         # Shortcut for a shortcut. Sue me
         embed = self.simple_embed(title=self.bot.command_not_found.format(cmd),
-                                  description='Commands are case sensitive. Please check your spelling and try again',
+                                  description=self.bot.translate_for(self.context.author,'help.help.not_found'),
                                   colour=colour, author=self.author)
         return embed
 
-    @commands.command(name='help', pass_context=True)
+    @commands.command(name='help', pass_context=True,help='help.help.help')
     async def help(self, ctx, *cmds: str):
         """Shows help documentation.
         [p]**help**: Shows the help manual.
@@ -377,7 +376,7 @@ class Help(formatter.HelpFormatter):
                         return
                 except AttributeError:
                     await self.send(self.destination,
-                                    embeds=[self.simple_embed(title='Command "{0.name}" has no subcommands.'.format(command),
+                                    embeds=[self.simple_embed(title=self.bot.translate_for(self.context.author,'help.help.no_subcommands').format(command),
                                                               colour=self.colour(
                                                                   ctx),
                                                               author=self.author)])

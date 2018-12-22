@@ -6,7 +6,7 @@ class Configure:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True,help='configure.profile.help')
     async def profile(self, ctx, target: converters.target):
         '''Show the profile of you or another user. Modify it with [p]profile set'''
         if ctx.invoked_subcommand is None:
@@ -17,25 +17,25 @@ class Configure:
                 colour = discord.Colour(
                     0xbb1177 if 'colour' not in prof else prof['colour'])
                 embed = discord.Embed(
-                    colour=colour, title=f'Profile for {target.name}')
+                    colour=colour, title=self.bot.translate_for(ctx.author,'configure.profile.profile_for').format(target.name))
                 # embed.add_field(
                 #     name='User Colour', value='Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:])
-                embed.add_field(name='osu! Username',
+                embed.add_field(name=self.bot.translate_for(ctx.author,'configure.profile.name'),
                                 value=prof.get('username') or 'Unset')
-                embed.add_field(name='Default osu! Mode',
+                embed.add_field(name=self.bot.translate_for(ctx.author,'configure.profile.mode'),
                                 value=modes.get(prof.get('mode')) or 'Unset')
-                embed.set_footer(text=f"User Colour: {'Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:]}")
+                embed.set_footer(text=self.bot.translate_for(ctx.author,'configure.profile.colour').format('Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:]))
             else:
-                embed = discord.Embed(colour=0xbb1177, title='An error occurred',
-                                      description=f'{"You" if target == ctx.author else "They"} don\'t have a profile!')
+                embed = discord.Embed(colour=0xbb1177, title=self.bot.translate_for(ctx.author,'configure.profile.error'),
+                                      description=self.bot.translate_for(ctx.author,'configure.profile.you_not') if target == ctx.author else self.bot.translate_for(ctx.author,'configure.profile.they_not'))
             await ctx.send(embed=embed)
 
     @profile.group(invoke_without_command=True)
     async def set(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send(f'You need to specify a key and a value. See `{ctx.prefix}help profile set` for more')
+            await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.fail').format(ctx.prefix))
 
-    @set.command(aliases=['color'])
+    @set.command(aliases=['color'],help='configure.profile.colour.help')
     async def colour(self, ctx, colour_code):
         '''Set the colour for embeds and banners.
         Provide a hex code like `[p]profile set colour #03dc03` or `[p]profile set colour 0088ff` or even `[p]profile set colour 0x123456`
@@ -47,11 +47,11 @@ class Configure:
             if colour > 0xffffff:
                 raise ValueError
             await self.bot.modify_profile_for(ctx.author, colour=colour)
-            await ctx.send('Your profile colour has been set.')
+            await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.colour.set'))
         except ValueError:
-            await ctx.send('That colour code is invalid.')
+            await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.colour.invalid'))
 
-    @set.command(aliases=['name'])
+    @set.command(aliases=['name'],help='configure.profile.set.username.help')
     async def username(self, ctx, *, username):
         '''Set your osu! username.
         Also sets the default user for [p]user and [p]banner.
@@ -59,9 +59,9 @@ class Configure:
         [p]profile set username INHERITED
         '''
         await self.bot.modify_profile_for(ctx.author, username=username)
-        await ctx.send('Your osu! username has been set.')
+        await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.username.set'))
 
-    @set.command(aliases=['defaultmode'])
+    @set.command(aliases=['defaultmode'],help='configure.profile.set.mode.help')
     async def mode(self, ctx, default_mode):
         '''Set your preferred mode.
         Also sets the default mode for [p]user and [p]banner.
@@ -113,10 +113,10 @@ class Configure:
         }
         if default_mode in bindings:
             await self.bot.modify_profile_for(ctx.author, mode=bindings[default_mode])
-            await ctx.send('Your default mode has been set.')
+            await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.mode.set'))
         else:
-            await ctx.send('That is not a valid mode.')
-    @commands.command()
+            await ctx.send(self.bot.translate_for(ctx.author,'configure.profile.set.mode.invalid'))
+    @commands.command(help='configure.setprefix.help')
     @commands.has_permissions(manage_guild=True)
     async def setprefix(self,ctx,newprefix):
         '''Sets the server's custom prefix (the original will still work under most circumstances). Requires the Manage Server permission. To use spaces in your prefix quote it.
@@ -131,9 +131,8 @@ class Configure:
         [p]setprefix ""'''
         newprefix = newprefix.lstrip(' ')
         if len(newprefix) > 10:
-            return await ctx.send('In order to prevent abuse to my disk, the custom prefix length has been capped at 10. Sorry!')
-        add = ('removed' if newprefix == '' else f'changed to `{newprefix}`') if ctx.guild.id in self.bot.prefixes else f'set to `{newprefix}`'
-        outmsg = f'Your server\'s custom prefix has been {add}'
+            return await ctx.send(self.bot.translate_for(ctx.author,'configure.setprefix.abuse'))
+        outmsg = (self.bot.translate_for(ctx.author,'configure.setprefix.removed') if newprefix == '' else self.bot.translate_for(ctx.author,'configure.setprefix.changed').format(newprefix)) if ctx.guild.id in self.bot.prefixes else self.bot.translate_for(ctx.author,'configure.setprefix.added').format(newprefix)
         self.bot.prefixes[ctx.guild.id] = newprefix
         if newprefix == '': del self.bot.prefixes[ctx.guild.id]
         await self.bot.save_prefixes()

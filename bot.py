@@ -6,21 +6,22 @@ import config
 from ast import literal_eval
 import traceback
 import aiofiles
+import locale
 
 try:
     open('profiles.sav').close()
 except:
-    with open('profiles.sav', 'w')as file:
+    with open('profiles.sav', 'w') as file:
         file.write('{}')
-with open('profiles.sav')as file:
+with open('profiles.sav') as file:
     profiledata = literal_eval(file.read())
 
 try:
     open('prefixes.sav').close()
 except:
-    with open('prefixes.sav', 'w')as file:
+    with open('prefixes.sav', 'w') as file:
         file.write('{}')
-with open('prefixes.sav')as file:
+with open('prefixes.sav') as file:
     prefixdata = literal_eval(file.read())
 
 
@@ -101,6 +102,15 @@ class pysu(commands.Bot):
         except:
             return
 
+    def locale_for(self, user):
+        try:
+            return self.profiles[user.id]['locale']
+        except:
+            return 'en'
+
+    def translate_for(self,user,string):
+        return locale.get_locale(self.locale(user),string)
+
     async def modify_profile_for(self, user, **kwargs):
         try:
             profile = self.profiles[user.id]
@@ -117,15 +127,15 @@ class pysu(commands.Bot):
         elif isinstance(error, discord.errors.Forbidden):
             pass
         elif isinstance(error, commands.errors.CheckFailure):
-            await ctx.send('You do not have permission to use this command.')
+            await ctx.send(self.translate_for(ctx.author,'error.permission'))
         elif isinstance(error, commands.errors.MissingRequiredArgument):
             formatter = commands.formatter.HelpFormatter()
             help = await formatter.format_help_for(ctx, ctx.command)
-            await ctx.send('You are missing required arguments.' + "\n" + help[0])
+            await ctx.send(self.translate_for(ctx.author,'error.arguments') + "\n" + help[0])
         elif isinstance(error, commands.errors.BadArgument):
-            await ctx.send('You have given an invalid argument.')
+            await ctx.send(self.translate_for(ctx.author,'error.argument'))
         else:
-            await ctx.send('An error occurred in the `{}` command. This has been automatically reported for you.'.format(ctx.command.name))
+            await ctx.send(self.translate_for(ctx.author,'error.error').format(ctx.command.name))
             print("Ignoring exception in command {}".format(ctx.command.name))
             trace = traceback.format_exception(
                 type(error), error, error.__traceback__)
@@ -134,7 +144,7 @@ class pysu(commands.Bot):
                 if len(out + i + '```') > 2000:
                     await self.channel.send(out + '```')
                     out = '```'
-                out += i
+                out +  = i
             await self.channel.send(out + '```')
 
     async def on_ready(self):
