@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+import aiohttp
+from lib import converters
 
 class Meta:
     def __init__(self, bot):
@@ -19,6 +21,16 @@ class Meta:
     async def support(self, ctx):
         ''' Get a link to the support server. '''
         return await ctx.send(':grey_question: Join the support server here: discord.gg/uda4VuE')
+
+    @commands.command(name="stats", aliases = ['info'])
+    async def info(self, ctx):
+        ''' Get information about the bot. '''
+        async with aiohttp.ClientSession() as session:
+            resp = await session.get('https://api.github.com/repos/jacc/osu/commits')
+            my_json = await resp.json()
+            embed = discord.Embed(colour=self.bot.colour_for(ctx.author), title='osu!bot stats')
+            embed.add_field(name='Latest GitHub Commit', value=f''' ```Commit {my_json[0]['sha']} made by {my_json[0]['commit']['author']['name']} - '{my_json[0]['commit']['message']}'``` ''')
+            return await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Meta(bot))
