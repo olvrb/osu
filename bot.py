@@ -144,7 +144,7 @@ class pysu(commands.Bot):
                 if len(out + i + '```') > 2000:
                     await self.channel.send(out + '```')
                     out = '```'
-                out +  = i
+                out += i
             await self.channel.send(out + '```')
 
     async def on_ready(self):
