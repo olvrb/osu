@@ -10,8 +10,6 @@ class Configure:
     async def profile(self, ctx, target: converters.target):
         '''Show the profile of you or another user. Modify it with [p]profile set'''
         if ctx.invoked_subcommand is None:
-            if target is None:
-                target = ctx.author
             prof = self.bot.profile_for(target)
             modes = {'osu': 'osu!', 'taiko': 'osu!taiko',
                      'mania': 'osu!mania', 'fruits': 'osu!catch'}
@@ -20,8 +18,8 @@ class Configure:
                     0xbb1177 if 'colour' not in prof else prof['colour'])
                 embed = discord.Embed(
                     colour=colour, title=f'Profile for {target.name}')
-                embed.add_field(
-                    name='User Colour', value='Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:])
+                # embed.add_field(
+                #     name='User Colour', value='Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:])
                 embed.add_field(name='osu! Username',
                                 value=prof.get('username') or 'Unset')
                 embed.add_field(name='Default osu! Mode',
