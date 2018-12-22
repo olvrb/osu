@@ -1,14 +1,15 @@
-import discord
-from discord.ext import commands
+# import discord
+# from discord.ext import commands
 
-class Configure:
-    def __init__(self, bot):
-        self.bot = bot
+# class Meta:
+#     def __init__(self, bot):
+#         self.bot = bot
 
-    @pysu.command(name = "ping", aliases = ['latency'])
-    async def latency(self, ctx):
-        return await ctx.send(f"⏱ `{round(self.bot.latency*1000)}ms`")
+#     @commands.command(name = "ping", aliases = ['latency'])
+#     async def latency(self, ctx):
+#         return await ctx.send(f"⏱ `{round(self.bot.latency*1000)}ms`")
 
 
 def setup(bot):
-    bot.add_cog(Meta(bot))
+    pass
+    # bot.add_cog(Meta(bot))
