@@ -26,7 +26,7 @@ class Configure:
                                 value=prof.get('username') or 'Unset')
                 embed.add_field(name='Default osu! Mode',
                                 value=modes.get(prof.get('mode')) or 'Unset')
-                embed.set_footer(f'User Color: {'Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:]}')
+                embed.set_footer(f"User Colour: {'Unset' if 'colour' not in prof else '#'+hex(prof['colour'])[2:]}")
             else:
                 embed = discord.Embed(colour=0xbb1177, title='An error occurred',
                                       description=f'{"You" if target == ctx.author else "They"} don\'t have a profile!')
